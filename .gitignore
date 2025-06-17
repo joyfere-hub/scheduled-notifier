@@ -1,0 +1,8 @@
+# ide
+.idea
+
+# build
+build/
+
+# private
+internal/job/private/

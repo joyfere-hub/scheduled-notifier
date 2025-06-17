@@ -1,0 +1,4 @@
+jobs:
+  - name: test
+    interval: '@every 5m'
+    token: token
