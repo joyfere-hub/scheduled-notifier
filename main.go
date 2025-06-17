@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	"log"
 	"os"
 
 	"github.com/getlantern/systray"
@@ -10,7 +10,6 @@ import (
 	"github.com/joyfere-hub/scheduled-notifier/internal/conf"
 	"github.com/joyfere-hub/scheduled-notifier/internal/ctx"
 	"github.com/joyfere-hub/scheduled-notifier/internal/work"
-	"github.com/segmentfault/pacman/log"
 )
 
 type App struct {
@@ -44,13 +43,12 @@ func (app *App) run() {
 	go func() {
 		menuItem := systray.AddMenuItem("Quit", "Quit the whole app")
 		<-menuItem.ClickedCh
-		fmt.Println("Quit")
 		app.exit()
 	}()
 
 	w, err := work.NewWorker(app.ctx)
 	if err != nil {
-		log.Error(err)
+		log.Panic(err)
 		return
 	}
 	app.w = w

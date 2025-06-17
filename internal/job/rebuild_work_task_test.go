@@ -1,7 +1,6 @@
 package job
 
 import (
-	"fmt"
 	"github.com/joyfere-hub/scheduled-notifier/internal/conf"
 	"github.com/joyfere-hub/scheduled-notifier/notifier"
 	"testing"
@@ -106,7 +105,7 @@ func Test_getToken(t *testing.T) {
 				t.Errorf("getToken() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			fmt.Printf("token: %s\n", got)
+			t.Logf("token: %s\n", got)
 		})
 	}
 }
@@ -127,7 +126,7 @@ func TestRebuildWorkTaskClient_FetchMessages(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c, err := NewClient(tt.conf)
+			c, err := NewClient("rebuild_work_task", tt.conf)
 			if err != nil {
 				t.Errorf("NewClient() error = %v", err)
 				return

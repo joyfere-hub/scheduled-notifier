@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/joyfere-hub/scheduled-notifier/notifier"
+	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
@@ -20,6 +22,8 @@ const (
 	uiEndpoint = "https://task.work.rebuildsoft.com/#"
 	taskPage   = uiEndpoint + "/task"
 )
+
+var logger = log.New(os.Stderr, "RebuildWorkTaskClient", log.LstdFlags)
 
 type RebuildWorkTaskClient struct {
 	Config        *conf.JobConfig
@@ -90,15 +94,15 @@ func newClient(jobConfig *conf.JobConfig) (JobClient, error) {
 	}, nil
 }
 
-func (c *RebuildWorkTaskClient) FetchMessages() (*[]notifier.Message, error) {
+func (c *RebuildWorkTaskClient) FetchMessages() (*notifier.Messages, error) {
 	orgList, err := c.GetOrgList()
 	if err != nil {
 		return nil, err
 	}
 	if orgList == nil {
-		return &[]notifier.Message{}, nil
+		return &notifier.Messages{}, nil
 	}
-	var messages []notifier.Message
+	var messages notifier.Messages
 	for _, org := range *orgList {
 		notificationList, err := c.getNotificationList(org)
 		if err != nil {

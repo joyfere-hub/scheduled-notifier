@@ -1,12 +1,12 @@
 package work
 
 import (
-	"fmt"
+	"log"
+
 	"github.com/joyfere-hub/scheduled-notifier/internal/ctx"
 	"github.com/joyfere-hub/scheduled-notifier/internal/job"
 	"github.com/joyfere-hub/scheduled-notifier/notifier"
 	"github.com/robfig/cron/v3"
-	"github.com/segmentfault/pacman/log"
 )
 
 type Worker struct {
@@ -15,21 +15,25 @@ type Worker struct {
 
 func NewWorker(ctx *ctx.Context) (*Worker, error) {
 	c := cron.New()
-	messageChan := make(chan *[]notifier.Message)
+	messageChan := make(chan *notifier.Messages)
 	for _, jobConfig := range *ctx.Conf.Jobs {
 		client, err := job.NewClient(jobConfig.Type, &jobConfig)
 		if err != nil {
 			return nil, err
 		}
-		fmt.Printf("Check client, fetch messages.\n")
-		_, err = client.FetchMessages()
+		log.Printf("Check %s client, fetch messages.", jobConfig.Type)
+		messages, err := client.FetchMessages()
+		if err != nil {
+			return nil, err
+		}
+		err = messages.Send()
 		if err != nil {
 			return nil, err
 		}
 		_, err = c.AddFunc(jobConfig.Interval, func() {
-			fmt.Printf("Fetch messages begin.\n")
+			log.Printf("Fetch messages begin.")
 			messages, err := client.FetchMessages()
-			fmt.Printf("Fetch messages end. count : %d\n", len(*messages))
+			log.Printf("Fetch messages end. count : %d", len(*messages))
 			if err != nil {
 				panic(err)
 			}
@@ -48,12 +52,9 @@ func NewWorker(ctx *ctx.Context) (*Worker, error) {
 			select {
 			case messages := <-messageChan:
 				if messages != nil {
-					for _, message := range *messages {
-						fmt.Printf("Send message: %v\n", message)
-						if err := message.Send(); err != nil {
-							log.Error(err)
-						}
-					}
+					// TODO message group
+					err := messages.Send()
+					log.Panic(err)
 				}
 			}
 		}

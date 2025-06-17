@@ -7,7 +7,7 @@ import (
 )
 
 type JobClient interface {
-	FetchMessages() (*[]notifier.Message, error)
+	FetchMessages() (*notifier.Messages, error)
 }
 
 var (

@@ -1,7 +1,6 @@
 package conf
 
 import (
-	"fmt"
 	"path/filepath"
 	"runtime"
 	"testing"
@@ -35,7 +34,7 @@ func TestReadConfig(t *testing.T) {
 				t.Errorf("ReadConfig() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			fmt.Println(gotC.String())
+			t.Logf(gotC.String())
 		})
 	}
 }
