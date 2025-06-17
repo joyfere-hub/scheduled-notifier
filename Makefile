@@ -34,7 +34,16 @@ clean:
 
 package-mac: mac
 	@echo "Packaging macOS app..."
-	@hdiutil create -volname "$(APP_NAME)" -srcfolder $(MAC_APP) -ov $(BUILD_DIR)/$(APP_NAME)-$(VERSION).dmg
+	create-dmg \
+		--volname "ScheduledNotifier Installer" \
+		--window-pos 200 120 \
+		--window-size 600 300 \
+		--icon-size 100 \
+		--icon "ScheduledNotifier.app" 150 150 \
+		--hide-extension "ScheduledNotifier.app" \
+		--app-drop-link 450 150 \
+		"$(BUILD_DIR)/ScheduledNotifier.dmg" \
+		 $(MAC_APP)
 	@echo "DMG created at $(BUILD_DIR)/$(APP_NAME)-$(VERSION).dmg"
 
 package-win: windows
