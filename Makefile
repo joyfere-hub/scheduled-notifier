@@ -5,9 +5,9 @@ RES_DIR=res
 MAC_APP=$(BUILD_DIR)/mac/$(APP_NAME).app
 WIN_EXE=$(BUILD_DIR)/windows/$(APP_NAME).exe
 
-.PHONY: all clean mac windows
+.PHONY: clean all mac windows
 
-all: mac windows
+all: clean mac windows
 
 mac: $(MAC_APP)
 
@@ -18,8 +18,8 @@ $(MAC_APP):
 	@mkdir -p $(MAC_APP)/Contents/MacOS
 	@mkdir -p $(MAC_APP)/Contents/Resources
 	@GOOS=darwin GOARCH=arm64 go build -o $(MAC_APP)/Contents/MacOS/$(APP_NAME) .
+	@chmod +x $(MAC_APP)/Contents/MacOS/$(APP_NAME)
 	@cp -r $(RES_DIR)/$(APP_NAME).app/Contents/Info.plist $(MAC_APP)/Contents/
-	@cp -r $(RES_DIR)/$(APP_NAME).app/Contents/Resources/ $(MAC_APPA)/Contents/Resources/
 	@echo "macOS app built at $(MAC_APP)"
 
 $(WIN_EXE):

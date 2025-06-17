@@ -1,4 +1,5 @@
 jobs:
-  - name: test
+  - type: rebuild_work_task
+    name: test
     interval: '@every 5m'
     token: token

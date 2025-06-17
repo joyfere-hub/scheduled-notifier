@@ -3,7 +3,7 @@ package work
 import (
 	"fmt"
 	"github.com/joyfere-hub/scheduled-notifier/internal/ctx"
-	"github.com/joyfere-hub/scheduled-notifier/internal/job/private"
+	"github.com/joyfere-hub/scheduled-notifier/internal/job"
 	"github.com/joyfere-hub/scheduled-notifier/notifier"
 	"github.com/robfig/cron/v3"
 	"github.com/segmentfault/pacman/log"
@@ -17,7 +17,7 @@ func NewWorker(ctx *ctx.Context) (*Worker, error) {
 	c := cron.New()
 	messageChan := make(chan *[]notifier.Message)
 	for _, jobConfig := range *ctx.Conf.Jobs {
-		client, err := private.NewClient(&jobConfig)
+		client, err := job.NewClient(jobConfig.Type, &jobConfig)
 		if err != nil {
 			return nil, err
 		}

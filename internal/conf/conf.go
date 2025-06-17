@@ -22,6 +22,7 @@ func (c *BaseConfig) String() string {
 }
 
 type JobConfig struct {
+	Type     string `json:"type" yaml:"type"`
 	Name     string `json:"name" yaml:"name"`
 	Interval string `json:"interval" yaml:"interval"`
 

@@ -3,6 +3,3 @@
 
 # build
 build/
-
-# private
-internal/job/private/
