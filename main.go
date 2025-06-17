@@ -6,10 +6,10 @@ import (
 	"os"
 
 	"github.com/getlantern/systray"
-	"github.com/getlantern/systray/example/icon"
 	"github.com/joyfere-hub/scheduled-notifier/internal/conf"
 	"github.com/joyfere-hub/scheduled-notifier/internal/ctx"
 	"github.com/joyfere-hub/scheduled-notifier/internal/work"
+	"github.com/joyfere-hub/scheduled-notifier/res"
 )
 
 type App struct {
@@ -37,13 +37,22 @@ func main() {
 }
 
 func (app *App) run() {
-	systray.SetIcon(icon.Data)
-	systray.SetTitle("scheduled-notifier")
+	systray.SetIcon(res.Icon)
+	systray.SetTitle("")
 	systray.SetTooltip("running")
+	fetchItem := systray.AddMenuItem("Fetch", "Fetch messages")
+	menuItem := systray.AddMenuItem("Quit", "Quit the whole app")
+
 	go func() {
-		menuItem := systray.AddMenuItem("Quit", "Quit the whole app")
-		<-menuItem.ClickedCh
-		app.exit()
+		for {
+			select {
+			case <-fetchItem.ClickedCh:
+				app.w.Fetch()
+			case <-menuItem.ClickedCh:
+				app.exit()
+				return
+			}
+		}
 	}()
 
 	w, err := work.NewWorker(app.ctx)
