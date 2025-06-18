@@ -1,4 +1,4 @@
-//go:build darwin && !linux && !freebsd && !netbsd && !openbsd && !windows && !js
+//go:build darwin
 
 package notifier
 
@@ -6,15 +6,20 @@ import (
 	"os/exec"
 )
 
+const defTerminalNotifierPath = "/opt/homebrew/opt/terminal-notifier/bin/terminal-notifier"
+
 // sendNotification sends a notification using the appropriate method for the current OS
 // Use terminal-notifier for macOS, see https://github.com/julienXX/terminal-notifier
 func sendNotification(title, message, link string) error {
-	_, err := exec.LookPath("terminal-notifier")
+	path, err := exec.LookPath("terminal-notifier")
 	if err != nil {
-		return err
+		path, err = exec.LookPath(defTerminalNotifierPath)
+		if err != nil {
+			return err
+		}
 	}
 	cmd := exec.Command(
-		"terminal-notifier",
+		path,
 		"-title", title,
 		"-message", message,
 		"-open", link,

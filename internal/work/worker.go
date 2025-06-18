@@ -43,7 +43,8 @@ func NewWorker(ctx *ctx.Context) (*Worker, error) {
 			messages, err := client.FetchMessages()
 			log.Printf("Fetch messages end. count : %d", len(*messages))
 			if err != nil {
-				panic(err)
+				log.Printf("Fetch messages fail, %v", err)
+				return
 			}
 			messageChan <- messages
 		})

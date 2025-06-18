@@ -1,4 +1,4 @@
-//go:build windows && !linux && !freebsd && !netbsd && !openbsd && !darwin && !js
+//go:build windows
 
 package notifier
 

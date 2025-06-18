@@ -13,6 +13,8 @@
     <key>CFBundleIconFile</key>
     <string>icon.icns</string>
     <key>LSUIElement</key>
+    <key>LSBackgroundOnly</key>
+    <string>1</string>
     <true/>
 </dict>
 </plist>
