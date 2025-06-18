@@ -1,22 +1,73 @@
 # Scheduled notifier
 
-一个简单的定时通知工具，通过定时调用 API 的方式，拉取通知到 MacOS 与 Window 的系统通知。
+A simple scheduled notifier tool, scheduled call api, then notifier.
 
 ## Usage
 
+Use makefile build.
+
+```shell
+make all
+```
+
 ### MacOS 
+
+On `MacOS`, `terminal-notifier` must be installed to receive system notifications.
 
 ```shell
 brew install terminal-notifier
 ```
 
-默认使用`~/.local/scheduled-notifier.yaml`作为配置文件，当然也可以配置环境变量`SCHEDULED_NOTIFIER_CONFIG_FILE_PATH`覆盖默认路径。
-同时支持在使用时添加`-config scheduled-notifier.yaml`，配置格式如下：
+Package dmg (Don't forge install `create-dmg`).
+
+```shell
+make package-mac
+```
+
+Run an executable file.
+
+```shell
+build/mac/ScheduledNotifier.app/Contents/MacOS/ScheduledNotifier
+```
+
+Open an app.
+
+```shell
+open build/mac/ScheduledNotifier.app
+```
+
+### Windows
+
+Use [go-toast](https://git.sr.ht/~jackmordaunt/go-toast) to receive system notifications, See [adaptive-interactive-toasts](https://learn.microsoft.com/en-us/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive-toasts)。
+
+```shell
+build/windows/ScheduledNotifier.exe
+```
+
+### Config
+
+Config order:
+1. `~/.local/scheduled-notifier.yaml`
+2. `env.SCHEDULED_NOTIFIER_CONFIG_FILE_PATH` 
+3. `ScheduledNotifier -config scheduled-notifier.yaml`
+
+### Build
+
+Base template, more template see `internal/job/*_template.md`:
 
 ```yaml
 jobs:
-  - type: rebuild_work_task # 客户端类型
-    name: test # 配置名称
-    interval: '@every 5m' # cron
-    token: token # token 认证方式，具体认证由 JobClient 实现决定。
+  - type: rebuild_work_task     # api client type, see internal/job
+    name: test                  # job name
+    interval: '@every 5m'       # cron
+    token: token                # The specific authentication is determined by the JobClient implementation.
 ```
+
+## TODO
+- [ ] Jenkins
+- [ ] Gitlab
+- [ ] more ...
+
+## Other
+
+I'm a Rookie. 
