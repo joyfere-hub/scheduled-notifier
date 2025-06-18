@@ -18,6 +18,10 @@ type App struct {
 }
 
 func main() {
+	_ = os.Remove("/tmp/scheduled-notifier.log")
+	f, _ := os.OpenFile("/tmp/scheduled-notifier.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	log.SetOutput(f)
+
 	configPath := ""
 	flag.StringVar(&configPath, "config", "", "config file path")
 	flag.Parse()
