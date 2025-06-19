@@ -4,6 +4,7 @@ import (
 	"flag"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/getlantern/systray"
 	"github.com/joyfere-hub/scheduled-notifier/internal/conf"
@@ -18,8 +19,9 @@ type App struct {
 }
 
 func main() {
-	_ = os.Remove("/tmp/scheduled-notifier.log")
-	f, _ := os.OpenFile("/tmp/scheduled-notifier.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	logFilePath := filepath.Join(os.TempDir(), "scheduled-notifier.log")
+	_ = os.Remove(logFilePath)
+	f, _ := os.OpenFile(logFilePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	log.SetOutput(f)
 
 	configPath := ""
